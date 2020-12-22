@@ -6,6 +6,7 @@ const { loginUser, createUser } = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const articlesRouter = require('./routes/articles');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,12 +18,14 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
   useFindAndModify: false,
 });
 
+app.use(requestLogger);
 app.post('/signin', loginUser);
 app.post('/signup', createUser);
 
 app.use(auth);
 app.use('/users', usersRouter);
 app.use('/articles', articlesRouter);
+app.use(errorLogger);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
