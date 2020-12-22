@@ -1,12 +1,26 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { loginUser, createUser } = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const articlesRouter = require('./routes/articles');
+const auth = require('./middlewares/auth');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+mongoose.connect('mongodb://localhost:27017/aroundb', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
+
+app.post('/signin', loginUser);
+app.post('/signup', createUser);
+
+app.use(auth);
 app.use('/users', usersRouter);
 app.use('/articles', articlesRouter);
 
