@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { celebrate, Joi } = require('celebrate');
 const { loginUser, createUser } = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const articlesRouter = require('./routes/articles');
@@ -19,8 +20,20 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
 });
 
 app.use(requestLogger);
-app.post('/signin', loginUser);
-app.post('/signup', createUser);
+
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }),
+}), loginUser);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required().pattern(new RegExp(/^[A-Za-z\d@$!%*#?&]{8,}$/gi)),
+  }),
+}), createUser);
 
 app.use(auth);
 app.use('/users', usersRouter);
