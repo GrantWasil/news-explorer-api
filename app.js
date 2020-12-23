@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { celebrate, Joi } = require('celebrate');
+const NotFoundError = require('./errors/not-found-err');
 const { loginUser, createUser } = require('./controllers/users');
 const usersRouter = require('./routes/users');
 const articlesRouter = require('./routes/articles');
@@ -10,6 +12,7 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -31,13 +34,17 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required(),
-    password: Joi.string().required().pattern(new RegExp(/^[A-Za-z\d@$!%*#?&]{8,}$/gi)),
+    password: Joi.string().required().pattern(new RegExp(/^[A-Za-z\d@$!%*#?&]{8,}$/i)),
   }),
 }), createUser);
 
 app.use(auth);
 app.use('/users', usersRouter);
 app.use('/articles', articlesRouter);
+app.use(() => {
+  throw new NotFoundError('Requested resource not found');
+});
+
 app.use(errorLogger);
 
 // eslint-disable-next-line no-unused-vars
