@@ -10,7 +10,7 @@ const {
 articlesRouter.get('/', celebrate({
   headers: Joi.object().keys({
     authorization: Joi.string().required(),
-  }),
+  }).unknown(true),
 }), getArticles);
 
 articlesRouter.post('/', celebrate({
@@ -25,7 +25,7 @@ articlesRouter.post('/', celebrate({
   }),
   headers: Joi.object().keys({
     authorization: Joi.string().required(),
-  }),
+  }).unknown(true),
 }), createArticle);
 
 articlesRouter.delete('/:articleId', celebrate({
@@ -34,7 +34,7 @@ articlesRouter.delete('/:articleId', celebrate({
   }),
   headers: Joi.object().keys({
     authorization: Joi.string().required(),
-  }),
+  }).unknown(true),
 }), deleteArticle);
 
 module.exports = articlesRouter;

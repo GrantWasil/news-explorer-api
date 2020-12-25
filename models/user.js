@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   name: {
     type: String,
+    default: '  ',
     requiredPaths: true,
     minlength: 2,
     maxlength: 30,
