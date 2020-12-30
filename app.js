@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const cors = require('cors');
 const NotFoundError = require('./errors/not-found-err');
 const routes = require('./routes');
@@ -26,6 +27,7 @@ app.use('/', routes);
 app.use(() => {
   throw new NotFoundError('Requested resource not found');
 });
+app.use(errors());
 app.use(errorLogger);
 app.use(errorHandler);
 

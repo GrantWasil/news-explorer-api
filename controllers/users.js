@@ -8,9 +8,6 @@ const InvalidDataError = require('../errors/invalid-data-err');
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Current user not found');
-      }
       res.send({
         data: {
           name: user.name,
@@ -18,7 +15,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         },
       });
     })
-    .catch(next);
+    .catch(next(new NotFoundError('Current user not found')));
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -34,9 +31,6 @@ module.exports.createUser = (req, res, next) => {
       name,
     }))
     .then((user) => {
-      if (!user) {
-        throw new InvalidDataError('Invalid Data passed to method');
-      }
       res.status(201).send({
         data: {
           name: user.name,
@@ -44,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
         },
       });
     })
-    .catch(next);
+    .catch(next(new InvalidDataError('Invalid Data passed to method')));
 };
 
 module.exports.loginUser = (req, res, next) => {
@@ -54,5 +48,5 @@ module.exports.loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(next);
+    .catch(next(new NotFoundError('User not found')));
 };

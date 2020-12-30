@@ -29,6 +29,7 @@ const articleSchema = new mongoose.Schema({
       validator(v) {
         return validator.isURL(v);
       },
+      message: 'Submitted link is not a valid URL',
     },
   },
   image: {
@@ -38,6 +39,7 @@ const articleSchema = new mongoose.Schema({
       validator(v) {
         return validator.isURL(v);
       },
+      message: 'Submitted link is not a valid URL',
     },
   },
   owner: {

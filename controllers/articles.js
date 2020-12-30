@@ -1,4 +1,7 @@
 const Article = require('../models/article');
+const InvalidDataError = require('../errors/invalid-data-err');
+const NotAuthorizedError = require('../errors/not-auth-err');
+const NotFoundError = require('../errors/not-found-err');
 
 module.exports.getArticles = (req, res, next) => {
   Article.find({})
@@ -28,13 +31,9 @@ module.exports.createArticle = (req, res, next) => {
     owner: req.user._id,
   })
     .then((article) => {
-      if (article) {
-        res.send({ data: article });
-        return;
-      }
-      throw new Error('Invalid Data passed to method');
+      res.send({ data: article });
     })
-    .catch(next);
+    .catch(next(new InvalidDataError('Invalid Data passed to method')));
 };
 
 module.exports.deleteArticle = (req, res, next) => {
@@ -46,14 +45,10 @@ module.exports.deleteArticle = (req, res, next) => {
           .then((deletedArticle) => {
             if (deletedArticle) {
               res.send({ data: deletedArticle });
-              return;
             }
-            throw new Error('Article to be removed was not found');
           })
-          .catch(next);
-      } else {
-        throw new Error('Not authorized to remove article');
+          .catch(next(new NotFoundError('Article to be removed was not found')));
       }
     })
-    .catch(next);
+    .catch(next(new NotAuthorizedError('Not authorized to remove article')));
 };
