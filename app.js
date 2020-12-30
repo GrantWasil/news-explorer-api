@@ -29,7 +29,7 @@ mongoose.connect(DATABASE_ADDRESS, {
 app.use(requestLogger);
 app.use('/', routes);
 app.use(() => {
-  throw new NotFoundError('Requested resource not found');
+  throw new NotFoundError();
 });
 app.use(errors());
 app.use(errorLogger);

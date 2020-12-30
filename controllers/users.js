@@ -15,7 +15,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         },
       });
     })
-    .catch(() => next(new NotFoundError('Current user not found')));
+    .catch(() => next(new NotFoundError()));
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports.createUser = (req, res, next) => {
         },
       });
     })
-    .catch(() => next(new InvalidDataError('Invalid Data passed to method')));
+    .catch(() => next(new InvalidDataError()));
 };
 
 module.exports.loginUser = (req, res, next) => {
@@ -48,5 +48,5 @@ module.exports.loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.status(200).send({ token });
     })
-    .catch(() => next(new NotFoundError('User not found')));
+    .catch(() => next(new NotFoundError()));
 };

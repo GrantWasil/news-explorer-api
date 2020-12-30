@@ -1,6 +1,6 @@
 class InvalidDataError extends Error {
   constructor(message) {
-    super(message);
+    super(message || 'Invalid Data Passed to Method.');
     this.statusCode = 400;
   }
 }

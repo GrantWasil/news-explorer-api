@@ -1,6 +1,6 @@
 class NotFoundError extends Error {
   constructor(message) {
-    super(message);
+    super(message || 'Requested Resource Not Found');
     this.statusCode = 404;
   }
 }
