@@ -37,7 +37,7 @@ module.exports.createArticle = (req, res, next) => {
 };
 
 module.exports.deleteArticle = (req, res, next) => {
-  Article.findById(req.params.articleId)
+  Article.findById(req.params.articleId).select('+owner')
     .then((article) => {
       // eslint-disable-next-line eqeqeq
       if (article.owner == req.user._id) {
@@ -48,6 +48,8 @@ module.exports.deleteArticle = (req, res, next) => {
             }
           })
           .catch(() => next(new NotFoundError()));
+      } else {
+        throw new NotAuthorizedError();
       }
     })
     .catch(() => next(new NotAuthorizedError()));
