@@ -10,7 +10,7 @@ const NotFoundError = require('./errors/not-found-err');
 const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
-const { DATABASE_ADDRESS } = require('./utils/constants');
+const { DATABASE_ADDRESS, PORT } = require('./utils/constants');
 
 const app = express();
 
@@ -35,4 +35,4 @@ app.use(errors());
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(3000);
+app.listen(PORT || 3000);
