@@ -9,11 +9,7 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       res.status(200).send({
-        data: {
-          name: user.name,
-          email: user.email,
-          id: req.user._id,
-        },
+        user,
       });
     })
     .catch(() => next(new NotFoundError()));
