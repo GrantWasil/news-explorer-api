@@ -12,7 +12,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         data: {
           name: user.name,
           email: user.email,
-          id: req.user_id,
+          userId: req.user_id,
         },
       });
     })
@@ -20,12 +20,9 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const {
-    email,
-    password,
-    name,
-  } = req.body;
-  bcrypt.hash(password, 10)
+  const { email, password, name } = req.body;
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
       email,
       password: hash,
@@ -46,7 +43,11 @@ module.exports.loginUser = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
       res.status(200).send({ token });
     })
     .catch(() => next(new NotFoundError()));
