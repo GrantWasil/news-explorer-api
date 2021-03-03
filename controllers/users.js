@@ -13,7 +13,6 @@ module.exports.getCurrentUser = (req, res, next) => {
           name: user.name,
           email: user.email,
           id: req.user._id,
-          user,
         },
       });
     })
